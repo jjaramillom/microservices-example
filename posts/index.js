@@ -12,22 +12,27 @@ app.use(cors());
 const posts = {};
 
 app.get('/post', (req, res) => {
-	res.send(posts);
+  res.send(posts);
 });
 
-app.post('/post', async (req, res) => {
-	const id = randomBytes(4).toString('hex');
-	const { title } = req.body;
-	posts[id] = { id, title };
-	await axios.post('http://localhost:4005/event', {
-		type: 'PostCreated',
-		data: { id, title },
-	});
-	res.send(posts[id]);
+app.post('/post/create', async (req, res) => {
+  const id = randomBytes(4).toString('hex');
+  const { title } = req.body;
+  posts[id] = { id, title };
+  // await axios.post('http://localhost:4005/event', {
+  // communication is done through the event-bus cluster IP service
+  await axios.post('http://event-bus-srv:4005/event', {
+    type: 'PostCreated',
+    data: { id, title },
+  });
+  res.send(posts[id]);
 });
 
 app.post('/event', (req, res) => {
-	res.end();
+  res.end();
 });
 
-app.listen(4000, () => console.log('listenting on 4000 POSTS'));
+app.listen(4000, () => {
+  console.log('V30');
+  console.log('listenting on 4000 POSTS');
+});

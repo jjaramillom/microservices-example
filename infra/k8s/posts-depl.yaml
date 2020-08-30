@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # Config options of the object to create
+  name: posts-depl # Name of the entity to create
+spec: # Attributes of the object to create
+  replicas: 1 # Number of pods we want to create running a particular image
+  selector: # Find all the pods with a label of app: posts
+    matchLabels:
+      app: posts
+  template:
+    metadata:
+      labels:
+        app: posts
+    spec: # Config of the pod we are creating
+      containers:
+        - name: posts
+          image: jjaramillom/posts:latest
+          imagePullPolicy: Never
+---
+# Create a new object
+apiVersion: v1
+kind: Service
+metadata: # Config options of the object to create
+  name: posts-clusterip-srv # Name of the entity to create
+spec: # Attributes of the object to create
+  type: ClusterIP
+  selector: # Find all the pods with a label of app: posts (to expose)
+    app: posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000 # Node port to expose
+      targetPort: 4000 # Pod port to access within the Node |(exposed by the container)

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # Config options of the object to create
+  name: moderation-depl # Name of the entity to create
+spec: # Attributes of the object to create
+  replicas: 1 # Number of pods we want to create running a particular image
+  selector: # Find all the pods with a label of app: moderation
+    matchLabels:
+      app: moderation
+  template:
+    metadata:
+      labels:
+        app: moderation
+    spec: # Config of the pod we are creating
+      containers:
+        - name: moderation
+          image: jjaramillom/moderation:latest
+          imagePullPolicy: Never
+---
+# Create a new object
+apiVersion: v1
+kind: Service
+metadata: # Config options of the object to create
+  name: moderation-srv # Name of the entity to create
+spec: # Attributes of the object to create
+  type: ClusterIP
+  selector: # Find all the pods with a label of app: moderation (to expose)
+    app: moderation
+  ports:
+    - name: moderation
+      protocol: TCP
+      port: 4003 # Node port to expose
+      targetPort: 4003 # Pod port to access within the Node |(exposed by the container)

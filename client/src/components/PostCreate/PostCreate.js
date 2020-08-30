@@ -7,7 +7,7 @@ const PostCreate = (props) => {
 	const onSubmit = async (ev) => {
 		ev.preventDefault();
 		if (!title) return;
-		await axios.post('http://localhost:4000/post', { title: title });
+		await axios.post('http://posts.com/post/create', { title: title });
 
 		setTitle('');
 	};

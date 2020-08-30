@@ -1,0 +1,58 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts: # Something inside the project that Skaffold needs to maintain
+    - image: jjaramillom/client
+      context: client # From where the pod is getting the code (directory)
+      docker:
+        dockerfile: dockerfile
+      sync: # When there are changes here, Skaffold is going to update the pod
+        manual:
+          - src: 'src/**/*.js'
+            dest: .
+    - image: jjaramillom/comments
+      context: comments 
+      docker:
+        dockerfile: dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: jjaramillom/event-bus
+      context: event-bus 
+      docker:
+        dockerfile: dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: jjaramillom/moderation
+      context: moderation 
+      docker:
+        dockerfile: dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: jjaramillom/posts
+      context: posts 
+      docker:
+        dockerfile: dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: jjaramillom/query
+      context: query 
+      docker:
+        dockerfile: dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .

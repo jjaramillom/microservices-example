@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # Config options of the object to create
+  name: query-depl # Name of the entity to create
+spec: # Attributes of the object to create
+  replicas: 1 # Number of pods we want to create running a particular image
+  selector: # Find all the pods with a label of app: query
+    matchLabels:
+      app: query
+  template:
+    metadata:
+      labels:
+        app: query
+    spec: # Config of the pod we are creating
+      containers:
+        - name: query
+          image: jjaramillom/query:latest
+          imagePullPolicy: Never
+---
+# Create a new object (the cluster ip service to communicate within the Node)
+apiVersion: v1
+kind: Service
+metadata: # Config options of the object to create
+  name: query-clusterip-srv # Name of the entity to create
+spec: # Attributes of the object to create
+  type: ClusterIP
+  selector: # Find all the pods with a label of app: query (to expose)
+    app: query
+  ports:
+    - name: query
+      protocol: TCP
+      port: 4002 # Node port to expose
+      targetPort: 4002 # Pod port to access within the Node |(exposed by the container)

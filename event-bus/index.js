@@ -6,7 +6,9 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const servicePorts = ['4000', '4001', '4002', '4003'];
+// const servicePorts = ['4000', '4001', '4002', '4003'];
+const services = ['posts-clusterip-srv:4000', 'comments-srv:4001', 'query-srv:4002', 'moderation-srv:4003'];
+
 
 const eventStore = [];
 
@@ -16,10 +18,10 @@ app.post('/event', (req, res) => {
 
 	eventStore.push(event);
 
-	servicePorts.forEach((port) =>
+	services.forEach((service) =>
 		axios
-			.post(`http://localhost:${port}/event`, event)
-			.catch((err) => console.log(`Error communicating with service in port ${port}`))
+			.post(`http://${service}/event`, event)
+			.catch((err) => console.log(`Error communicating with service => ${service}`))
 	);
 
 	res.send({ status: 'OK' });

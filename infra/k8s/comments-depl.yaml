@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # Config options of the object to create
+  name: comments-depl # Name of the entity to create
+spec: # Attributes of the object to create
+  replicas: 1 # Number of pods we want to create running a particular image
+  selector: # Find all the pods with a label of app: comments
+    matchLabels:
+      app: comments
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec: # Config of the pod we are creating
+      containers:
+        - name: comments
+          image: jjaramillom/comments:latest
+          imagePullPolicy: Never
+---
+# Create a new object
+apiVersion: v1
+kind: Service
+metadata: # Config options of the object to create
+  name: comments-srv # Name of the entity to create
+spec: # Attributes of the object to create
+  type: ClusterIP
+  selector: # Find all the pods with a label of app: comments (to expose)
+    app: comments
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4001 # Node port to expose
+      targetPort: 4001 # Pod port to access within the Node |(exposed by the container)

@@ -1,5 +1,8 @@
 FROM node:alpine
 
+# Fixes existing bug in React
+ENV CI=true
+
 WORKDIR /app
 COPY package.json ./
 RUN npm install

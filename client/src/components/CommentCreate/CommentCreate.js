@@ -7,7 +7,7 @@ const PostCreate = (props) => {
 	const onSubmit = async (ev) => {
 		ev.preventDefault();
 		if (!content) return;
-		await axios.post(`http://localhost:4001/post/${props.postId}/comment`, { content: content });
+		await axios.post(`http://posts.com/post/${props.postId}/comment`, { content: content });
 
 		setContent('');
 	};

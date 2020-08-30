@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata: #Config options of the object to create
+  name: posts #Name of the pod to create
+spec: #Attributes of the object to create
+  containers:
+    - name: posts #Name of the container
+      image: jjaramillom/posts:latest #The image to use
+      imagePullPolicy: Never
